@@ -1,56 +1,63 @@
 import { useEffect, useRef, useState } from "react"
-import {toast} from "react-toastify"
+import { toast } from "react-toastify"
 import axios from 'axios';
-function ManageProduct(){
-    const [catdata,setcatdata] = useState([])
-
-    const [catid,setcatid] = useState()
-    const [pname,setpname] = useState()
-    const [rate,setrate] = useState("")
-    const [disc,setdisc] = useState()
-    const [stock,setstock] = useState()
-    const [feat,setfeat] = useState()
-    const [desc,setdesc] = useState();
-    const [picfile,setpicfile] = useState()
+import { useNavigate } from "react-router-dom";
+import useCategories from "../hooks/useCategories";
+import useSubCategories from "../hooks/useSubCategories";
+function ManageProduct() {
+    const navigate = useNavigate();
+    const { catdata, setcatdata, fetchcategory} = useCategories()
+    const [subcatid,setsubcatid] = useState("");
+    const [catid, setcatid] = useState("")
+    const [prodsdata, setprodsdata] = useState([])
+    const [pname, setpname] = useState()
+    const [rate, setrate] = useState("")
+    const [disc, setdisc] = useState()
+    const [stock, setstock] = useState()
+    const [feat, setfeat] = useState()
+    const [desc, setdesc] = useState();
+    const [picfile, setpicfile] = useState()
+    const [imgname, setimgname] = useState()
+    const [pid, setpid] = useState()
     const fileInput = useRef(null);
-
-    async function handleSubmit(e){
+    const [editmode, seteditmode] = useState(false)
+    const { subcatdata, setsubcatdata, fetchsubcatbycat} = useSubCategories(catid)
+    async function handleSubmit(e) {
         e.preventDefault();
-        try{
+        try {
             const formdata = new FormData();
-            formdata.append("cid",catid);
-            formdata.append("pname",pname);
-            formdata.append("rate",rate);
-            formdata.append("disc",disc);
-            formdata.append("stock",stock);
-            formdata.append("feat",feat);
-            formdata.append("description",desc);
-            if(picfile!=null)
-            {
-                formdata.append("pic",picfile)
+            formdata.append("cid", catid);
+            formdata.append("scid", subcatid);
+            formdata.append("pname", pname);
+            formdata.append("rate", rate);
+            formdata.append("disc", disc);
+            formdata.append("stock", stock);
+            formdata.append("feat", feat);
+            formdata.append("description", desc);
+            if (picfile != null) {
+                formdata.append("pic", picfile)
             }
             // if (fileInput.current.files.length > 0) {
             //     formdata.append('pic', fileInput.current.files[0]);
             // }
-            const apiresp = await axios.post('http://localhost:9000/api/saveproduct',formdata)
-            if(apiresp.data.success===1){
+            const apiresp = await axios.post(`${process.env.REACT_APP_APIURL}/api/saveproduct`, formdata)
+            if (apiresp.data.success === 1) {
                 toast.success("Product added successfully")
-                clear();   
+                clear();
             }
-            else if(apiresp.data.success === 0){
+            else if (apiresp.data.success === 0) {
                 toast.error("Product not added")
             }
-            else{
+            else {
                 toast.error("Some error occured try again")
             }
         }
-        catch(e)
-        {
-            toast.error("Error Occured "+e.message)
+        catch (e) {
+            toast.error("Error Occured " + e.message)
         }
     }
 
-    function clear(){
+    function clear() {
         setcatid("");
         setpname('')
         setrate("")
@@ -62,42 +69,143 @@ function ManageProduct(){
         fileInput.current.value = "";
     }
 
-    async function fetchcatagory(){
-        try{
-            const apiresp = await axios.get("http://localhost:9000/api/getallcat")
-            if(apiresp.data.success===1)
-            {
-                setcatdata(apiresp.data.cdata)
+
+
+    async function fetchprodsbycat() {
+        try {
+            const apiresp = await axios.get(`${process.env.REACT_APP_APIURL}/api/getprodsbycat?cid=${catid}`)
+            if (apiresp.data.success === 1) {
+                setprodsdata(apiresp.data.pdata)
             }
-            else if(apiresp.data.success===0)
-            {
-                setcatdata([])
-                toast.info("No categories found")
+            else if (apiresp.data.success === 0) {
+                setprodsdata([])
+                toast.info("No products under this found")
             }
-            else{
+            else {
                 toast.error("Some error occured,try again")
             }
+        }
+        catch (e) {
+            toast.error("Error Occured " + e.message)
+        }
     }
-    catch(e)
-    {
-        toast.error("Error Occured "+e.message)
+
+    useEffect(() => {
+        if (catid !== "") {
+            fetchprodsbycat()
+        }
+    }, [catid])
+
+
+    async function handledelete(id) {
+        try {
+            if (window.confirm("Are you sure that you want to delete?")) {
+                const apiresp = await axios.delete(`${process.env.REACT_APP_APIURL}/api/delprod/${id}`)
+                if (apiresp.data.success === 1) {
+                    toast.info("Product deleted successfully")
+                    fetchprodsbycat();
+                }
+                else if (apiresp.data.success === 0) {
+                    setprodsdata([])
+                    toast.info("Category not deleted")
+                }
+                else {
+                    toast.error("Some error occured, try again")
+                }
+            }
+
+        }
+        catch (e) {
+            toast.error("Error occured" + e.message)
+        }
     }
+
+
+    function handleupdate(data) {
+        // setcatdata(data.catid)
+        setpname(data.prodname)
+        setrate(data.rate)
+        setdisc(data.discount)
+        setstock(data.stock)
+        setfeat(data.featured)
+        setdesc(data.description)
+        setimgname(data.picname)
+        seteditmode(true)
+        setpid(data._id)
+    }
+
+    function handlecancel() {
+        seteditmode(false)
+        setcatdata("")
+        setpname("")
+        setrate("")
+        setdisc("")
+        setstock("")
+        setfeat("")
+        setdesc("")
+        setimgname("")
+        setpicfile(null)
+        fileInput.current.value = "";
+    }
+
+    const updateproduct = async () => {
+        try {
+            const formdata = new FormData();
+            formdata.append("catid", catid)
+            formdata.append("prodname", pname)
+            formdata.append("rate", rate)
+            formdata.append("discount", disc)
+
+            formdata.append("stock", stock)
+            formdata.append("featured", feat)
+            formdata.append("description", desc)
+            formdata.append("oldpicname", imgname)
+            formdata.append("pid", pid)
+
+            if (picfile != null) {
+                formdata.append("pic", picfile)
+            }
+            const apiresp = await axios.put(`${process.env.REACT_APP_APIURL}/api/updateproduct`, formdata)
+            if (apiresp.data.success === 1) {
+                toast.success("Product updated successfully")
+                handlecancel()
+            }
+            else if (apiresp.data.success === 0) {
+                toast.info("Product not updated")
+            }
+            else {
+                toast.error("Some error occured,try again")
+            }
+        }
+        catch (e) {
+            toast.error("Error occured" + e.message)
+        }
+
     }
 
     useEffect(()=>{
-        fetchcatagory()
+        if(sessionStorage.getItem("uinfo")===null){
+            toast.info("Please login to access the page")
+            navigate("/login")
+        }
+        else if(sessionStorage.getItem("uinfo")!=null){
+            const userdata = JSON.parse(sessionStorage.getItem("uinfo"))
+            if(userdata.usertype!=="admin"){
+                toast.info("Please login with proper credentials to access the page");
+                navigate("/login")
+            }
+        }
     },[])
-
-    return(
+    
+    return (
         <>
             <div id="page-content">
-    	<div className="page section-header text-center">
-			<div className="page-title">
-        		<div className="wrapper"><h1 className="page-width">Add new Product</h1></div>
-      		</div>
-		</div>
-        
-        <div className="container">
+                <div className="page section-header text-center">
+                    <div className="page-title">
+                        <div className="wrapper"><h1 className="page-width">Add new Product</h1></div>
+                    </div>
+                </div>
+                <div className="container">
                     <div className="row">
                         <div className="col-12 col-sm-12 col-md-6 col-lg-6 main-col offset-md-3">
                             <div className="mb-4">
@@ -106,55 +214,73 @@ function ManageProduct(){
                                         <div className="col-12 col-sm-12 col-md-12 col-lg-12">
                                             <div className="form-group">
                                                 <label for="CategoryName">Category Name</label>
-                                                <select name="catname" value={catid} onChange={(e)=>setcatid(e.target.value)}>
+                                                <select name="catname" value={catid} onChange={(e) => setcatid(e.target.value)}>
                                                     <option value="">Choose Category</option>
                                                     {
-                                                        catdata.length>0?
-                                                        catdata.map((data,i)=>
-                                                            <option value={data._id} key={i}>{data.catname}</option>
-                                                        ):null
+                                                        catdata.length > 0 ?
+                                                            catdata.map((data, i) =>
+                                                                <option value={data._id} key={i}>{data.catname}</option>
+                                                            ) : null
                                                     }
                                                 </select>
-                                                
+
+                                            </div>
+                                        </div>
+                                        <div className="col-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div className="form-group">
+                                                <label for="SubCategoryName">Sub Category Name</label>
+                                                <select name="subcatname" value={subcatid} onChange={(e) => setsubcatid(e.target.value)}>
+                                                    <option value="">Choose Category</option>
+                                                    {
+                                                        subcatdata.length > 0 ?
+                                                            subcatdata.map((data, i) =>
+                                                                <option value={data._id} key={i}>{data.subcatname}</option>
+                                                            ) : null
+                                                    }
+                                                </select>
+
                                             </div>
                                         </div>
                                         <div className="col-12 col-sm-12 col-md-12 col-lg-12">
                                             <div className="form-group">
                                                 <label for="Cname">Product Name</label>
-                                                <input type="text" name="cname" placeholder=""  value={pname} onChange={(e) => setpname(e.target.value)}/>
+                                                <input type="text" name="cname" placeholder="" value={pname} onChange={(e) => setpname(e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="col-12 col-sm-12 col-md-12 col-lg-12">
                                             <div className="form-group">
                                                 <label for="rate">Rate</label>
-                                                <input type="text" name="rate" placeholder="" value={rate} onChange={(e) => setrate(e.target.value)}/>
+                                                <input type="text" name="rate" placeholder="" value={rate} onChange={(e) => setrate(e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="col-12 col-sm-12 col-md-12 col-lg-12">
                                             <div className="form-group">
                                                 <label for="disc">Discount</label>
-                                                <input type="text" name="discount" placeholder="" value={disc} onChange={(e) => setdisc(e.target.value)}/>
+                                                <input type="text" name="discount" placeholder="" value={disc} onChange={(e) => setdisc(e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="col-12 col-sm-12 col-md-12 col-lg-12">
                                             <div className="form-group">
                                                 <label for="stock">Stock</label>
-                                                <input type="text" name="stock" placeholder="" value={stock} onChange={(e) => setstock(e.target.value)}/>
+                                                <input type="text" name="stock" placeholder="" value={stock} onChange={(e) => setstock(e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="col-12 col-sm-12 col-md-12 col-lg-12">
                                             <div className="form-group">
-                                        
-                                                <label><input type="radio" name="featured" checked={feat === "Yes"} value="Yes" onChange={(e)=>setfeat(e.target.value)}/>Yes</label> &nbsp; &nbsp;
-                                                <label><input type="radio" name="featured" value="No" checked={feat === "No"} onChange={(e)=>setfeat(e.target.value)}/>No</label>
+
+                                                <label><input type="radio" name="featured" checked={feat === "Yes"} value="Yes" onChange={(e) => setfeat(e.target.value)} />Yes</label> &nbsp; &nbsp;
+                                                <label><input type="radio" name="featured" value="No" checked={feat === "No"} onChange={(e) => setfeat(e.target.value)} />No</label>
                                             </div>
                                         </div>
 
                                         <div className="col-12 col-sm-12 col-md-12 col-lg-12">
                                             <div className="form-group">
-                                                <label>Enter description of your Product</label><textarea value={desc} onChange={(e)=>setdesc(e.target.value)}></textarea>
+                                                <label>Enter description of your Product</label><textarea value={desc} onChange={(e) => setdesc(e.target.value)}></textarea>
                                             </div>
                                         </div>
+
+                                        {editmode ? <>&nbsp;&nbsp;<img src={`uploads/${imgname}`} height={75} alt="catpic" /></> : null}
+
                                         <div className="col-12 col-sm-12 col-md-12 col-lg-12">
                                             <div className="form-group">
                                                 <label for="picfile">Add Pic</label>
@@ -162,23 +288,65 @@ function ManageProduct(){
                                                     onChange={(e) => setpicfile(e.target.files[0])} />
                                             </div>
                                         </div>
-                                        
+
                                     </div>
-                                    <div className="row">
-                                        <div className="text-center col-12 col-sm-12 col-md-12 col-lg-12">
-                                            <input type="submit" className="btn mb-3" value="Add Category"/>
-                                        </div>
-                                    </div>
+
+                                    {
+                                        editmode ?
+                                            <>
+                                                <br /><div align="center"><input type="button" className="btn btn-primary" name="btn" value="Update Category" onClick={updateproduct} /> &nbsp;
+                                                    <input type="button" className="btn btn-primary" name="btn" value="Cancel" onClick={handlecancel} /></div>
+                                                <br />
+                                            </> : <><div className="row">
+                                                <div className="text-center col-12 col-sm-12 col-md-12 col-lg-12">
+                                                    <input type="submit" className="btn mb-3" value="Add Product" />
+                                                </div>
+                                            </div></>
+                                    }
                                 </form>
                             </div>
                         </div>
                     </div>
-                </div>        
-        
-    </div>
+                </div>
+                {
+                    prodsdata.length > 0 ?
+                        <>
+                            <div className="page section-header text-center">
+                                <div className="page-title">
+                                    <div className="wrapper"><h1 className="page-width">Added Products</h1></div>
+                                </div>
+                            </div>
+                            <table className="text-center">
+                                <tbody>
+                                    <tr>
+                                        <th>Picture</th>
+                                        <th>Name</th>
+                                        <th>Rate</th>
+                                        <th>Update</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    {
+                                        prodsdata.map((data, i) =>
+                                            <tr key={i}>
+                                                <td><img src={`uploads/${data.picname}`} height='75' alt="prodspic" /></td>
+                                                <td>{data.prodname}</td>
+                                                <td>{data.rate}</td>
+                                                <td><button onClick={() => handleupdate(data)} className="btn btn-primary">Update</button></td>
+                                                <td><button className="btn btn-danger" onClick={() => handledelete(data._id)}>Delete</button></td>
+                                            </tr>
+
+                                        )
+                                    }
+                                    <br></br>
+                                </tbody>
+                            </table>
+                        </> : null
+
+                }
+
+            </div>
         </>
     )
 }
 
 export default ManageProduct;
- 

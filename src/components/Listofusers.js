@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react"
 import {toast} from "react-toastify"
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 function ListofUsers(){
     const [uname,setuname] = useState()
     const [allinfo,setallinfo] = useState([])
+    const navigate = useNavigate();
     async function fetchallusers(){
         try{
-            const apiresp = await axios.get(`http://localhost:9000/api/listofusers`)
+            const apiresp = await axios.get(`${process.env.REACT_APP_APIURL}/api/listofusers`,{headers: {authorization:sessionStorage.getItem('jtoken')}})
             if(apiresp.data.success===1){
                 setallinfo(apiresp.data.udata)
             }
@@ -26,7 +28,7 @@ function ListofUsers(){
     async function handleSubmit(id){
         try{
             if(window.confirm("Are you sure that you want to delete?")){
-                const apiresp = await axios.delete(`http://localhost:9000/api/deluser/${id}`)
+                const apiresp = await axios.delete(`${process.env.REACT_APP_APIURL}/api/deluser/${id}`)
                 if (apiresp.data.success === 1) {
                     toast.info("User deleted successfully")
                     fetchallusers();
@@ -50,6 +52,21 @@ function ListofUsers(){
     useEffect(()=>{
         fetchallusers();
     },[])
+
+    useEffect(()=>{
+        if(sessionStorage.getItem("uinfo")===null){
+            toast.info("Please login to access the page")
+            navigate("/login")
+        }
+        else if(sessionStorage.getItem("uinfo")!=null){
+            const userdata = JSON.parse(sessionStorage.getItem("uinfo"))
+            if(userdata.usertype!=="admin"){
+                toast.info("Please login with proper credentials to access the page");
+                navigate("/login")
+            }
+        }
+    },[])
+
     return(
         <>
             <div id="page-content">

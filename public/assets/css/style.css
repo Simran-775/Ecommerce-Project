@@ -1662,3 +1662,52 @@ body.home15-funiture-template { font-size:14px; }
 
 .blur-up.lazyloaded { -webkit-filter:blur(0); filter:blur(0); }
 .blur-up { -webkit-filter:blur(5px); filter:blur(5px); transition:filter 400ms, -webkit-filter 400ms; -webkit-transition:filter 400ms, -webkit-filter 400ms; }
+
+.categoryrow{
+
+}
+
+
+
+.imageofproduct{
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+.imageofproduct img{
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+}
+
+.prodimagecss{
+  width: 500px;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.prodimagecss img{
+  width: 400px;
+  height: 400px;
+}
+
+
+.nob{
+  border: none;
+}
+
+.cust{
+  position: absolute;
+  right: 0;
+  top: 29px;
+  z-index: 222;
+  margin: 0;
+  width: 140px;
+  background: white;
+}

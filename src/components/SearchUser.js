@@ -1,13 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {toast} from "react-toastify"
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 function SearchUser(){
+    const navigate = useNavigate()
     const [uname,setuname] = useState()
     const [info,setinfo] = useState({})
     async function handleSubmit(e){
         e.preventDefault();
         try{
-            const apiresp = await axios.get(`http://localhost:9000/api/searchuser?em=${uname}`)
+            const apiresp = await axios.get(`${process.env.REACT_APP_APIURL}/api/searchuser?em=${uname}`)
             if(apiresp.data.success===1){
                 setinfo(apiresp.data.udata)
             }
@@ -25,6 +27,21 @@ function SearchUser(){
             toast.error("Error while signing up")
         }
     }
+
+    useEffect(()=>{
+        if(sessionStorage.getItem("uinfo")===null){
+            toast.info("Please login to access the page")
+            navigate("/login")
+        }
+        else if(sessionStorage.getItem("uinfo")!=null){
+            const userdata = JSON.parse(sessionStorage.getItem("uinfo"))
+            if(userdata.usertype!=="admin"){
+                toast.info("Please login with proper credentials to access the page");
+                navigate("/login")
+            }
+        }
+    },[])
+
     return(
         <>
             <div id="page-content">
