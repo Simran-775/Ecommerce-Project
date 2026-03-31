@@ -30,8 +30,10 @@ during a 6-week industrial training at GTB Computer Education, Jalandhar.
 **Tools:** Git, Postman, VS Code
 
 ## 📸 Screenshots
-
-
+![Menu](Screenshots/1.png)
+![Menu](Screenshots/3.png)
+![Menu](Screenshots/4.png)
+![Menu](Screenshots/5.png)
 <!-- Add screenshots here -->
 
 ## 🚀 How to Run Locally
