@@ -74,12 +74,4 @@ Submitted as training project for B.Tech CSE AIML at DAVIET, PTU.
 Made with 💙 by [Simranjeet Kaur](https://www.linkedin.com/in/simrandadiala775/)
 ```
 
----
 
-Two important things while you add this:
-
-**1. ⚠️ Delete the `.env` file from the repo!** I can see it's publicly visible in your file structure. Go to the repo → click `.env` → click the trash/delete icon. It may contain database credentials. Do this first before anything else!
-
-**2. Add topics** to the repo via the ⚙️ gear in About:
-```
-mern react nodejs mongodb expressjs ecommerce fullstack javascript
