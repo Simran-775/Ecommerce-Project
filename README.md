@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# 🛒 Belle Ecommerce Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A fully dynamic full-stack Ecommerce Website built with the MERN stack 
+during a 6-week industrial training at GTB Computer Education, Jalandhar.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+- 🛍️ Product display with categories
+- 🔐 User authentication (Login / Register)
+- 🛒 Shopping cart functionality
+- 📦 Order management
+- 🔗 RESTful API integration
+- 💾 MongoDB database for seamless data management
+- 📱 Responsive UI design
 
-### `npm start`
+## 🛠️ Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Frontend:**
+![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**Backend:**
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=flat&logo=express&logoColor=white)
 
-### `npm test`
+**Database:**
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=flat&logo=mongodb&logoColor=white)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Tools:** Git, Postman, VS Code
 
-### `npm run build`
+## 📸 Screenshots
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<!-- Add screenshots here -->
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🚀 How to Run Locally
+```bash
+# Clone the repo
+git clone https://github.com/Simran-775/Ecommerce-Project.git
+cd Ecommerce-Project
 
-### `npm run eject`
+# Install frontend dependencies
+npm install
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+# Start frontend
+npm start
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# In a new terminal, start backend
+node server.js
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+> Make sure MongoDB is running locally before starting the server.
+> Add your environment variables in `.env` file.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 📚 What I Learned
 
-## Learn More
+- Building RESTful APIs with Node.js and Express
+- State management and component design in React
+- MongoDB database integration and schema design
+- API testing with Postman
+- Version control with Git and GitHub
+- Full-stack application architecture
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🏆 Context
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Built as part of a **6-week Industrial Training** at GTB Computer Education, 
+Jalandhar under the mentorship of Mr. Tarunpreet Singh.
+Submitted as training project for B.Tech CSE AIML at DAVIET, PTU.
 
-### Code Splitting
+## 📬 Contact
+Made with 💙 by [Simranjeet Kaur](https://www.linkedin.com/in/simrandadiala775/)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+Two important things while you add this:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**1. ⚠️ Delete the `.env` file from the repo!** I can see it's publicly visible in your file structure. Go to the repo → click `.env` → click the trash/delete icon. It may contain database credentials. Do this first before anything else!
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**2. Add topics** to the repo via the ⚙️ gear in About:
+```
+mern react nodejs mongodb expressjs ecommerce fullstack javascript
